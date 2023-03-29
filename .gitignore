@@ -42,7 +42,7 @@ app.*.map.json
 android.gradle/
 
 # Local Configuration file
-android/local.properties
+AndroidManifest.xml
 
 # Android Studio will place build artifacts here
 /android/app/debug
