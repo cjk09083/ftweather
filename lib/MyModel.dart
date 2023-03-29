@@ -5,7 +5,7 @@ class MyModel extends ChangeNotifier {
 
   int get count => _count;
 
-  void incrementCount() {
+  void addMarker() {
     _count++;
     notifyListeners();
   }

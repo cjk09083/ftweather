@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'MyHomePage.dart';
+import 'Home.dart';
 import 'MyModel.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       create: (context) => MyModel(),
       child: MaterialApp(
         title: 'Flutter Weather App',
-        home: MyHomePage(),
+        home: Home(),
       ),
     );
   }
