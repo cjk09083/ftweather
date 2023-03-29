@@ -5,7 +5,7 @@ Flutter state management pattern
 같은 기능의 앱을 Provider / BloC / GetX 패턴으로 각각 개발 <br>
 
 
-1. Provider
+1. Provider : 현재 진행중 https://github.com/cjk09083/ftweather
 
 
 2. Bloc
