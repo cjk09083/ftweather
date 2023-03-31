@@ -15,6 +15,7 @@ class Home extends StatelessWidget {
     final model = Provider.of<MyModel>(context, listen: false);
     final markers = Provider.of<MyModel>(context).markers;
 
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Weather App'),
@@ -26,6 +27,8 @@ class Home extends StatelessWidget {
             model.setController(controller);
           },
           mapType: MapType.Hybrid,
+          locationButtonEnable: true,
+
           initialCameraPosition: mapPosition, // MyModel에서 가져온 mapPosition 사용
           // initLocationTrackingMode: LocationTrackingMode.Follow, // 권한 획득 시 현재 위치를 따라가는 모드 설정
           markers: markers, // MyModel에서 가져온 markers 사용

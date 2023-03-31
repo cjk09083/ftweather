@@ -35,6 +35,7 @@ dependencies:
   provider: ^6.0.5
   naver_map_plugin:
     git: https://github.com/LBSTECH/naver_map_plugin.git
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

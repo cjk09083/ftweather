@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'dart:developer';
+import 'package:geolocator/geolocator.dart';
 
 class MyModel extends ChangeNotifier {
   final TAG = "ftweather"; // 로그 태그
@@ -36,13 +37,16 @@ class MyModel extends ChangeNotifier {
       // 현재 카메라 위치 가져오기
       CameraPosition currentCameraPosition = await _controller!.getCameraPosition();
       // 로그 출력
-      log("$TAG : Pos $currentCameraPosition");
+      log("$TAG : Camera Pos $currentCameraPosition");
 
       // 현재 위치에 마커 추가
       final marker = Marker(
         markerId: _markers.length.toString(),
         position: currentCameraPosition.target,
       );
+
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      log("$TAG : Real Pos $position");
 
       // 마커 목록에 추가
       _markers.add(marker);

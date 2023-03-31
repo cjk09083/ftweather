@@ -47,5 +47,19 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NMFClientId</key>
+	<string>$(NAVER_MAP_KEY)</string>
+	<key>io.flutter.embedded_views_preview</key>
+    <string>YES</string>
+    <key>NSAppTransportSecurity</key>
+	<dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+      <key>NSAllowsArbitraryLoadsInWebContent</key>
+      <true/>
+    </dict>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>The app needs location permission</string>
+
 </dict>
 </plist>

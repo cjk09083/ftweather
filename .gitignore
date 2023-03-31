@@ -38,6 +38,9 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# .xcconfig iOS API KEY
+*.xcconfig
+
 # Gradle
 android.gradle/
 
