@@ -41,6 +41,9 @@ app.*.map.json
 # .xcconfig iOS API KEY
 *.xcconfig
 
+# podfile.lock
+Podfile.lock
+
 # Gradle
 android.gradle/
 
