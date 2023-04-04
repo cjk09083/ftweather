@@ -35,7 +35,11 @@ dependencies:
   provider: ^6.0.5
   naver_map_plugin:
     git: https://github.com/LBSTECH/naver_map_plugin.git
-  geolocator: ^9.0.2
+  geolocator: ^8.0.0
+
+  firebase_core: ^2.9.0
+  firebase_messaging: ^14.4.0
+  flutter_local_notifications: ^9.3.0
 
 dev_dependencies:
   flutter_test:

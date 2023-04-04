@@ -44,6 +44,12 @@ app.*.map.json
 # podfile.lock error
 Podfile.lock
 
+# firebase config
+google-services.json
+firebase_options.dart
+GoogleService-Info.plist
+firebase_app_id_file.json
+
 # Gradle
 android.gradle/
 
