@@ -2,9 +2,8 @@
 
 <p> 
   <h4>개발일지 모아보기 : 
-    <a style="height:15px;width:50px" 
-       href="https://cjk09083.tistory.com/category/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%93%A4/%EB%82%A0%EC%94%A8%EC%95%B1" target="_blank">
-      <img src=https://img.shields.io/badge/Tistory-000000.svg?&style=for-the-badge&logo=Tistory&logoColor=white alt=github />
+    <a href="https://cjk09083.tistory.com/category/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%93%A4/%EB%82%A0%EC%94%A8%EC%95%B1" target="_blank">
+      <img  src=https://img.shields.io/badge/Tistory-000000.svg?&style=flat-square&logo=Tistory&logoColor=white alt=github />
     </a> 
   </h4> 
 </p>
