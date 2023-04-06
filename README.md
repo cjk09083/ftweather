@@ -8,16 +8,19 @@
 
 Flutter state management pattern
 
-플러터 상태관리 패턴 학습용 앱 개발 <br>
+## 플러터 상태관리 패턴 학습용 앱 개발 <br>
 같은 기능의 앱을 Provider / BloC / GetX 패턴으로 각각 개발 <br>
 
 
 
->## 1. Provider : 현재 진행중 https://github.com/cjk09083/ftweather  
->### - Flutter Provider 앱 생성 : https://cjk09083.tistory.com/49
+>### Provider : https://github.com/cjk09083/ftweather  
+>#### 1. Flutter Provider 앱 생성 : https://cjk09083.tistory.com/49
+>#### 2. Flutter Naver Maps 추가 : https://cjk09083.tistory.com/56
+>#### 3. Flutter fcm 알림 기능 추가 (Android)
+>#### 4. Flutter Provider 앱 생성 : https://cjk09083.tistory.com/58
 
 
->## 2. Bloc
+>### Bloc
 
 
->## 3. GetX
+>### GetX
