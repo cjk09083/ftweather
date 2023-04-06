@@ -53,27 +53,32 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 
 // 백그라운드 상태에서 메시지 처리하는 함수
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
   log('$TAG Handling a background message');
   // 알림 정보
   RemoteNotification? notification = message.notification;
-  log('$TAG Message title: ${notification?.title}');
-  log('$TAG Message body: ${notification?.body}');
+  parseFcm(notification);
 }
 
 
 Future<void> fcmInit() async {
   // 알림 권한
-  final settings = await FirebaseMessaging.instance.requestPermission(
+  await FirebaseMessaging.instance.requestPermission(
     announcement: true,
     carPlay: true,
     criticalAlert: true,
   );
-  await FirebaseMessaging.instance.subscribeToTopic('ftweather');
+  // await FirebaseMessaging.instance.subscribeToTopic('ftweather');
 
   // 알림 초기화
   await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
   var initializationSettingsAndroid = const AndroidInitializationSettings('@mipmap/ic_launcher');
-  var initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+  var initializationSettingsIOS = const IOSInitializationSettings(
+      requestSoundPermission: true, requestBadgePermission: true, requestAlertPermission: true);
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+  );
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: _onSelectNotification);
 
   // FirebaseMessaging 인스턴스 생성
@@ -82,20 +87,29 @@ Future<void> fcmInit() async {
   log('$TAG fcmToken : $fcmToken');
 
   // 앱이 백그라운드 상태에서 알림을 클릭하여 실행되었을 때의 초기 메시지를 가져옵니다.
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  bgClicked(initialMessage);
+  bgClickedAndroid();
+  bgClickedIos();
 
   // 앱이 포그라운드 상태일 때 메시지 처리
+  onMessage();
+
+  // 앱이 백그라운드 상태일 때 메시지 처리
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+
+  }
+
+void onMessage() {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     log('$TAG Got a message while in the foreground!');
-
+  
     // 알림 표시
     RemoteNotification? notification = message.notification;
-    log('$TAG Message title: ${notification?.title}');
-    log('$TAG Message body: ${notification?.body}');
-
+    log('$TAG Message title (fg): ${notification?.title}');
+    log('$TAG Message body (fg): ${notification?.body}');
+  
     AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
+    if (notification != null ) {
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
@@ -104,37 +118,53 @@ Future<void> fcmInit() async {
           android: AndroidNotificationDetails(
             channel.id,
             channel.name,
-            icon: android.smallIcon,
+            icon: (android != null)?android.smallIcon:null,
           ),
+          iOS: const IOSNotificationDetails(
+              presentAlert: true, presentBadge: true,  presentSound: true,),
         ),
-        payload: "title:${notification.title}, body:${notification.body}"
+        payload: "title:${notification.title}, body:${notification.body}",
       );
+    }else{
+      if (notification == null) log('$TAG Message notification null ');
     }
   });
+}
 
-  // 앱이 백그라운드 상태일 때 메시지 처리
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-
-  }
 
 
 // 포그라운드 알림 클릭 처리를 위한 콜백 함수
 Future<void> _onSelectNotification(String? payload) async {
+  log('$TAG Clicked a message while in the foreground!');
   if (payload != null) {
-    log('$TAG Clicked a message while in the foreground!');
     log('$TAG Message payload: $payload');
   }
 }
 
-// 백그라운드 알림 클릭 처리를 위한 콜백 함수
-void bgClicked(RemoteMessage? initialMessage) {
-   if (initialMessage != null) {
-    log('$TAG Clicked a message while in the background!');
+// 백그라운드 알림 클릭 처리를 위한 콜백 함수 (android)
+Future<void> bgClickedAndroid() async {
+  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    log('$TAG Clicked a message while in the background! (Android)');
     RemoteNotification? notification = initialMessage.notification;
-    log('$TAG Message title: ${notification?.title}');
-    log('$TAG Message body: ${notification?.body}');
+    parseFcm(notification);
   }
+}
+
+// 백그라운드 알림 클릭 처리를 위한 콜백 함수 (ios)
+void bgClickedIos() {
+  Stream<RemoteMessage> stream = FirebaseMessaging.onMessageOpenedApp;
+  stream.listen((RemoteMessage event) async {
+    log('$TAG Clicked a message while in the background! (iOS)');
+    RemoteNotification? notification = event.notification;
+    parseFcm(notification);
+  });
+}
+
+// 메세지 클릭 오픈 후 처리 함수
+void parseFcm(RemoteNotification? notification) {
+  log('$TAG Message title (bg): ${notification?.title}');
+  log('$TAG Message body (bg): ${notification?.body}');
 }
 
 // 위치 서비스 권한 요청 함수
