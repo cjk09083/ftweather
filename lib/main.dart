@@ -51,7 +51,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-// 백그라운드 상태에서 메시지 처리하는 함수
+// 백그라운드 상태에서 메시지 처리하는 함수 (Android)
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   log('$TAG Handling a background message');
