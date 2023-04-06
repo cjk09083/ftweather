@@ -13,10 +13,11 @@ Flutter state management pattern
 
 
 
-> 1. Provider : 현재 진행중 https://github.com/cjk09083/ftweather  
-> *** Flutter Provider 앱 생성 : https://cjk09083.tistory.com/49
-
-> 2. Bloc
+>## 1. Provider : 현재 진행중 https://github.com/cjk09083/ftweather  
+>### - Flutter Provider 앱 생성 : https://cjk09083.tistory.com/49
 
 
-> 3. GetX
+>## 2. Bloc
+
+
+>## 3. GetX
