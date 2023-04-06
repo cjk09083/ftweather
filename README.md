@@ -10,7 +10,6 @@
 
 같은 기능의 앱을 Provider / BloC / GetX 패턴으로 각각 개발   
 <br>  
-<br>
 
 >## Provider 
 >####   1. Flutter Provider 앱 생성 : https://cjk09083.tistory.com/49
