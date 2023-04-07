@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ftweather/model/MapModel.dart';
 import 'package:provider/provider.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
 
-import '../provider/MapModel.dart';
 
 class Home extends StatelessWidget {
   // super.key를 전달하여 Key를 받을 수 있는 선택적 인자를 추가

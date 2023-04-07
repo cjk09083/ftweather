@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'lib/fcm_manager.dart';
-import 'lib/location_manager.dart';
-import 'provider/MapModel.dart';
+import 'manager/FcmManager.dart';
+import 'manager/LocationManager.dart';
+import 'model/MapModel.dart';
 import 'screen/Home.dart';
 
 Future<void> main() async {
