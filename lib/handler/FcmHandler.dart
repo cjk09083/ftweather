@@ -43,11 +43,15 @@ Future<void> setupFcmHandlers() async {
 
 }
 
-// 백그라운드 메시지 핸들러
+// 백그라운드 메시지 수신시 핸들러 (Android)
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  log('$TAG Handling a background message');
-  openBackgroundMessage(message);
+  log('$TAG Got a message while in the background!');
+  RemoteNotification? notification = message.notification;
+  if (notification != null) {
+    log('$TAG Message title (bg): ${notification.title}');
+    log('$TAG Message body (bg): ${notification.body}');
+  }
 }
 
 // 포그라운드 메시지 핸들러
