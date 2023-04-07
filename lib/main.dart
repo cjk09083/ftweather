@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'manager/FcmManager.dart';
-import 'manager/LocationManager.dart';
+import 'manager/LocalRequestManager.dart';
 import 'model/MapModel.dart';
 import 'screen/Home.dart';
 
