@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:ftweather/provider/MapModel.dart';
 import 'package:provider/provider.dart';
@@ -17,20 +15,23 @@ class MarkerList extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
             child: Row(
               children: [
-                Expanded(flex: flexList[0], child: const Text('이름',textAlign: TextAlign.center,),),
-                Expanded(flex: flexList[1], child: const Text('경도, 위도',textAlign: TextAlign.center,),),
-                Expanded(flex: flexList[2], child: const Text('시간',textAlign: TextAlign.center,),),
-                Expanded(flex: flexList[3], child: const Text('삭제',textAlign: TextAlign.center,),),
+                buildHeader('이름', flex: flexList[0], size: 13, weight: FontWeight.bold),
+                buildDivider(thick: 1),
+                buildHeader('경도, 위도', flex: flexList[1], size: 13, weight: FontWeight.bold),
+                buildDivider(thick: 1),
+                buildHeader('시간', flex: flexList[2], size: 13, weight: FontWeight.bold),
+                buildDivider(thick: 1),
+                buildHeader('삭제', flex: flexList[3], size: 13, weight: FontWeight.bold),
               ],
             ),
           ),
-          const Divider(color: Colors.black,height: 5,),
+          const Divider(color: Colors.black, thickness: 1,),
           Expanded(
             child: ListView.separated(
-              separatorBuilder: (context, index) => const Divider(),
+              separatorBuilder: (context, index) => const Divider(color:Colors.black),
               itemCount: markers.length,
               itemBuilder: (BuildContext context, int index) {
                 final markerInfo = markers[index].infoWindow!.split("\n");
@@ -41,22 +42,19 @@ class MarkerList extends StatelessWidget {
                 return ListTile(
                   title: Row(
                     children: [
-                      Expanded(flex: flexList[0],
-                        child: Text(name,textAlign: TextAlign.center,),
-                      ),
-                      Expanded(flex: flexList[1],
-                        child: Text('$lat,\n$lng',textAlign: TextAlign.center,),
-                      ),
-                      Expanded(flex: flexList[2],
-                        child: Text(createdAt,textAlign: TextAlign.center,),
-                      ),
+                      buildHeader(name, flex: flexList[0], ),
+                      buildDivider(),
+                      buildHeader('$lat,\n$lng', flex: flexList[1], ),
+                      buildDivider(),
+                      buildHeader(createdAt, flex: flexList[2], ),
+                      buildDivider(),
                       Expanded(flex: flexList[3],
                         child: IconButton(
                           onPressed: () {
                             Provider.of<MapModel>(context, listen: false).removeMarker(index);
                           },
                           icon: const Icon(Icons.delete_forever_rounded),
-                          iconSize: 35,
+                          iconSize: 30,
                         ),
                       ),
                     ],
@@ -66,6 +64,27 @@ class MarkerList extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildHeader(String text,
+      {int flex = 1, double size = 12, weight = FontWeight.normal, color = Colors.black}) {
+    return Expanded(
+        flex: flex,
+        child: Text(text,textAlign: TextAlign.center,
+            style: TextStyle(color: color, fontSize: size, fontWeight: weight)
+        )
+    );
+  }
+
+  Widget buildDivider({double thick = 0.0}) {
+    return SizedBox(
+      height: 20,
+      child: VerticalDivider(
+        color: Colors.black,
+        width: 1,
+        thickness: thick,
       ),
     );
   }
