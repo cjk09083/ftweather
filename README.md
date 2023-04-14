@@ -20,7 +20,7 @@
 >####   6. Flutter ListView 추가 : https://cjk09083.tistory.com/64
 
 ## 남은과제
-- 마커들 save,load 
+- 마커들 sharedPreference set, save, load 
 - 맵 롱클릭해서 마커추가 
 - 마커 롱클릭해서 삭제
 - 리스트 클릭시 마커 포커스 
