@@ -39,7 +39,7 @@ class MapModel extends ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Add Marker"),
+          title: const Text("Marker 추가"),
           content: Form(
             key: formKey,
             child: Column(
@@ -47,9 +47,6 @@ class MapModel extends ChangeNotifier {
               children: [
                 TextFormField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: "Marker 이름",
-                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Name cannot be empty";
@@ -94,9 +91,9 @@ class MapModel extends ChangeNotifier {
         markerId: (_markers.length.toString()),
         position: currentCameraPosition.target,
         captionText: name,
-        infoWindow: "$name,\n"
-            "lat: ${currentCameraPosition.target.latitude.toStringAsFixed(7)},\n"
-            "lon: ${currentCameraPosition.target.longitude.toStringAsFixed(7)},\n"
+        infoWindow: "$name\n"
+            "lat: ${currentCameraPosition.target.latitude.toStringAsFixed(7)}\n"
+            "lon: ${currentCameraPosition.target.longitude.toStringAsFixed(7)}\n"
             "$createdAt",
       );
 

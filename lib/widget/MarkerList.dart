@@ -27,22 +27,29 @@ class MarkerList extends StatelessWidget {
               ],
             ),
           ),
-
+          const Divider(color: Colors.black,height: 5,),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => const Divider(),
               itemCount: markers.length,
               itemBuilder: (BuildContext context, int index) {
-                final markerInfo = markers[index].infoWindow!.split(',');
+                final markerInfo = markers[index].infoWindow!.split("\n");
                 final name = markerInfo[0];
-                final lat = markerInfo[1].substring(6);
-                final lng = markerInfo[2].substring(6);
-                final createdAt = markerInfo[3].substring(1);
+                final lat = markerInfo[1].substring(5);
+                final lng = markerInfo[2].substring(5);
+                final createdAt = markerInfo[3];
                 return ListTile(
                   title: Row(
                     children: [
-                      Expanded(flex: flexList[0], child: Text(name,textAlign: TextAlign.center,),),
-                      Expanded(flex: flexList[1], child: Text('$lat,\n$lng',textAlign: TextAlign.center,),),
-                      Expanded(flex: flexList[2], child: Text(createdAt,textAlign: TextAlign.center,),),
+                      Expanded(flex: flexList[0],
+                        child: Text(name,textAlign: TextAlign.center,),
+                      ),
+                      Expanded(flex: flexList[1],
+                        child: Text('$lat,\n$lng',textAlign: TextAlign.center,),
+                      ),
+                      Expanded(flex: flexList[2],
+                        child: Text(createdAt,textAlign: TextAlign.center,),
+                      ),
                       Expanded(flex: flexList[3],
                         child: IconButton(
                           onPressed: () {
