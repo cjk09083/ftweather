@@ -3,8 +3,9 @@ import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'dart:developer';
 import 'package:geolocator/geolocator.dart';
 
+import '../main.dart';
+
 class MapModel extends ChangeNotifier {
-  final TAG = "ftweather"; // 로그 태그
 
   // 초기 카메라 위치 설정
   final CameraPosition _mapPosition = const CameraPosition(

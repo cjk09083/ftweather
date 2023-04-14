@@ -5,6 +5,8 @@ import 'manager/FcmManager.dart';
 import 'manager/RequestManager.dart';
 import 'screen/Home.dart';
 
+final TAG = "ftweather"; // 로그 태그
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
