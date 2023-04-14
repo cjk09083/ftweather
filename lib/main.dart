@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ftweather/provider/MapModel.dart';
 import 'package:provider/provider.dart';
 import 'manager/FcmManager.dart';
 import 'manager/RequestManager.dart';
-import 'model/MapModel.dart';
 import 'screen/Home.dart';
 
 Future<void> main() async {
@@ -11,18 +11,22 @@ Future<void> main() async {
   await fcmInit();                          // firebase 초기화 및 fcm 관련 설정
   await requestLocationPermission();        // 위치 권한 획득
 
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MapModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyModel(),
-      child: const MaterialApp(
-        title: 'Flutter Weather App',
-        home: Home(),
-      ),
+    return const MaterialApp(
+      title: 'Flutter Weather App',
+      home: Home(),
     );
   }
 }
