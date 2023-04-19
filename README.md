@@ -19,7 +19,7 @@
 >####   5. Flutter file, func 분류 : https://cjk09083.tistory.com/59
 >####   6. Flutter ListView 추가 : https://cjk09083.tistory.com/64
 >####   7. Flutter Shared Preferences 추가 : https://cjk09083.tistory.com/65
->####   8. Flutter CameraMove 추가 & NaverMaps 플러그인 변경 : https://cjk09083.tistory.com/65
+>####   8. Flutter CameraMove 추가 & NaverMaps 플러그인 변경 : https://cjk09083.tistory.com/68
 
 ## 남은과제
 - 맵 롱클릭해서 마커 추가 (스킵) 
