@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:ftweather/provider/MapModel.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:provider/provider.dart';
 
 class MarkerList extends StatelessWidget {
@@ -23,7 +23,7 @@ class MarkerList extends StatelessWidget {
                 buildDivider(thick: 1),
                 buildHeader('경도, 위도', flex: flexList[1], size: 13, weight: FontWeight.bold),
                 buildDivider(thick: 1),
-                buildHeader('시간', flex: flexList[2], size: 13, weight: FontWeight.bold),
+                buildHeader('등록일', flex: flexList[2], size: 13, weight: FontWeight.bold),
                 buildDivider(thick: 1),
                 buildHeader('삭제', flex: flexList[3], size: 13, weight: FontWeight.bold),
               ],
@@ -38,16 +38,16 @@ class MarkerList extends StatelessWidget {
     );
   }
 
-  ListView markerListView(List<Marker> markers) {
+  ListView markerListView(List<NMarker> markers) {
     return ListView.separated(
       separatorBuilder: (context, index) => const Divider(color:Colors.black),
       itemCount: markers.length,
       itemBuilder: (BuildContext context, int index) {
-        final markerInfo = markers[index].infoWindow!.split("\n");
-        final name = markerInfo[0];
-        final lat = markerInfo[1].substring(5);
-        final lng = markerInfo[2].substring(5);
-        final createdAt = markerInfo[3];
+        NMarker marker = markers[index];
+        final name = marker.caption!.text;
+        final lat = marker.position.latitude.toStringAsFixed(6);
+        final lng = marker.position.longitude.toStringAsFixed(6);
+        final createdAt = marker.info.id;
         return GestureDetector(
           onTap: (){
             Provider.of<MapModel>(context, listen: false).moverCamera(index);

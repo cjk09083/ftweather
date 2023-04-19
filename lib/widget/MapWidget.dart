@@ -1,32 +1,48 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:ftweather/provider/MapModel.dart';
-import 'package:naver_map_plugin/naver_map_plugin.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
+
 class MapWidget extends StatelessWidget {
-  const MapWidget({Key? key}) : super(key: key);
+  MapWidget({Key? key}) : super(key: key);
+
+  NaverMapViewOptions option = const NaverMapViewOptions(
+    initialCameraPosition: NCameraPosition(
+        target: NLatLng(37.5666805, 126.9784147),
+        zoom: 15,
+        bearing: 0,
+        tilt: 0
+    ),
+    mapType: NMapType.basic,
+    locationButtonEnable: true,
+  );
 
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<MapModel>(context, listen: false);
-    log("initialCameraPosition : ${model.mapPosition}");
 
     return Expanded(
       flex: 6,
       child: Stack(
         children: [
           NaverMap(
-            // NaverMapController를 model에 전달
-            onMapCreated: (controller) {
+            options: option,
+            onMapReady: (controller) {
               model.setController(controller);
             },
-            mapType: MapType.Basic,
-            locationButtonEnable: true,
-            initialCameraPosition: model.mapPosition, // MyModel에서 가져온 mapPosition 사용
+            onMapTapped: (point, latLng) {
+              log("$TAG onMapTapped point: $point, latLng: $latLng");
+              model.allOverlayClose();
+            },
+            onSymbolTapped: (symbol){
+              log("$TAG onSymbolTapped symbol: $symbol");
+              model.allOverlayClose();
+            },
             // initLocationTrackingMode: LocationTrackingMode.Follow, // 권한 획득 시 현재 위치를 따라가는 모드 설정
-            markers: model.markers, // MapModel에서 가져온 markers 사용
           ),
           Positioned(
             bottom: 16,
