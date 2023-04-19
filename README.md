@@ -18,9 +18,9 @@
 >####   4. Flutter fcm 알림 기능 추가 (iOS) : https://cjk09083.tistory.com/58
 >####   5. Flutter file, func 분류 : https://cjk09083.tistory.com/59
 >####   6. Flutter ListView 추가 : https://cjk09083.tistory.com/64
+>####   7. Flutter Shared Preferences 추가 : https://cjk09083.tistory.com/65
 
 ## 남은과제
-- 마커들 sharedPreference set, save, load 
 - 맵 롱클릭해서 마커 추가 
 - 마커 롱클릭해서 마커 이동
 - 리스트 클릭시 마커 포커스 
