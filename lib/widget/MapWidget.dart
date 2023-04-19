@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:ftweather/provider/MapModel.dart';
 import 'package:naver_map_plugin/naver_map_plugin.dart';
@@ -8,9 +10,8 @@ class MapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mapPosition = Provider.of<MapModel>(context).mapPosition;
     final model = Provider.of<MapModel>(context, listen: false);
-    final markers = Provider.of<MapModel>(context).markers;
+    log("initialCameraPosition : ${model.mapPosition}");
 
     return Expanded(
       flex: 6,
@@ -23,9 +24,9 @@ class MapWidget extends StatelessWidget {
             },
             mapType: MapType.Basic,
             locationButtonEnable: true,
-            initialCameraPosition: mapPosition, // MyModel에서 가져온 mapPosition 사용
+            initialCameraPosition: model.mapPosition, // MyModel에서 가져온 mapPosition 사용
             // initLocationTrackingMode: LocationTrackingMode.Follow, // 권한 획득 시 현재 위치를 따라가는 모드 설정
-            markers: markers, // MapModel에서 가져온 markers 사용
+            markers: model.markers, // MapModel에서 가져온 markers 사용
           ),
           Positioned(
             bottom: 16,
@@ -33,7 +34,7 @@ class MapWidget extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () {
                 // addMarker() 메서드를 호출하여 현재 위치에 마커 추가
-                Provider.of<MapModel>(context, listen: false).addMarker(context);
+                model.addMarker(context);
               },
               child: const Icon(Icons.add),
             ),

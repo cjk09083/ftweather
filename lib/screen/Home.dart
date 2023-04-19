@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ftweather/provider/MapModel.dart';
 import 'package:ftweather/widget/MapWidget.dart';
 import 'package:ftweather/widget/MarkerList.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,8 +13,8 @@ class Home extends StatelessWidget {
       ),
       body: Column(
         children: [
-          MapWidget(),
-          MarkerList(),
+          MapWidget(),  //  NaverMap & Add Button
+          MarkerList(), //  ListView
         ],
       ),
     );
