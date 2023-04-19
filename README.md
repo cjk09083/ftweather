@@ -19,11 +19,11 @@
 >####   5. Flutter file, func 분류 : https://cjk09083.tistory.com/59
 >####   6. Flutter ListView 추가 : https://cjk09083.tistory.com/64
 >####   7. Flutter Shared Preferences 추가 : https://cjk09083.tistory.com/65
+>####   8. Flutter CameraMove 추가 & NaverMaps 플러그인 변경 : https://cjk09083.tistory.com/65
 
 ## 남은과제
-- 맵 롱클릭해서 마커 추가 
-- 마커 롱클릭해서 마커 이동
-- 리스트 클릭시 마커 포커스 
+- 맵 롱클릭해서 마커 추가 (스킵) 
+- 마커 롱클릭해서 마커 이동 (스킵)
 - 리스트 롱클릭 + 상하 슬라이드해서 마커 순서 변경  
 - 리스트 좌우 슬라이드해서 이름변경 / 삭제
 - 리스트 내부 버튼으로 현재좌표 날씨 확인 
