@@ -18,8 +18,16 @@
 >####   4. Flutter fcm 알림 기능 추가 (iOS) : https://cjk09083.tistory.com/58
 >####   5. Flutter file, func 분류 : https://cjk09083.tistory.com/59
 >####   6. Flutter ListView 추가 : https://cjk09083.tistory.com/64
+>####   7. Flutter Shared Preferences 추가 : https://cjk09083.tistory.com/65
 
-> 남은과제: 마커들 save,load / 맵 롱클릭해서 마커추가 / 리스트 클릭시 마커 포커스 / 리스트 롱클릭해서 마커 삭제 / 리스트 버튼으로 날씨 확인 / 주소 검색
+## 남은과제
+- 맵 롱클릭해서 마커 추가 
+- 마커 롱클릭해서 마커 이동
+- 리스트 클릭시 마커 포커스 
+- 리스트 롱클릭 + 상하 슬라이드해서 마커 순서 변경  
+- 리스트 좌우 슬라이드해서 이름변경 / 삭제
+- 리스트 내부 버튼으로 현재좌표 날씨 확인 
+- 주소 검색
 
 <br>
 <br>
