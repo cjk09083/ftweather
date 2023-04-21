@@ -3,15 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'dart:developer';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../main.dart';
-import 'dart:collection';
 
 class MapModel extends ChangeNotifier {
-
-
 
   // NaverMapController 변수
   NaverMapController? _controller;
@@ -56,6 +51,7 @@ class MapModel extends ChangeNotifier {
       );
       _infoWindows.add(onMarkerInfoWindow);
       marker.setOnTapListener((NMarker marker) {
+        closeInfoAll();
         marker.openInfoWindow(onMarkerInfoWindow);
       });
 
@@ -162,6 +158,7 @@ class MapModel extends ChangeNotifier {
       // log("$TAG : Real Pos $position");
 
       marker.setOnTapListener((NMarker marker) {
+        closeInfoAll();
         marker.openInfoWindow(onMarkerInfoWindow);
       });
 
@@ -204,7 +201,7 @@ class MapModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> moverCamera(int index) async {
+  Future<void> moveCamera(int index) async {
     if (_controller != null) {
       NMarker marker = _markers[index];
       NLatLng markerLatLng = NLatLng(
@@ -269,7 +266,7 @@ class MapModel extends ChangeNotifier {
     return newInfoList;
   }
 
-  void allOverlayClose(){
+  void closeInfoAll(){
     log('$TAG allOverlayClose ${_infoWindows.length}');
     for(NInfoWindow window in _infoWindows){
       if(window.isAdded) window.close();

@@ -50,7 +50,7 @@ class MarkerList extends StatelessWidget {
         final createdAt = marker.info.id;
         return GestureDetector(
           onTap: (){
-            Provider.of<MapModel>(context, listen: false).moverCamera(index);
+            Provider.of<MapModel>(context, listen: false).moveCamera(index);
           },
           child: ListTile(
             title: Row(

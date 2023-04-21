@@ -27,35 +27,37 @@ class MapWidget extends StatelessWidget {
 
     return Expanded(
       flex: 6,
-      child: Stack(
-        children: [
-          NaverMap(
-            options: option,
-            onMapReady: (controller) {
-              model.setController(controller);
-            },
-            onMapTapped: (point, latLng) {
-              log("$TAG onMapTapped point: $point, latLng: $latLng");
-              model.allOverlayClose();
-            },
-            onSymbolTapped: (symbol){
-              log("$TAG onSymbolTapped symbol: $symbol");
-              model.allOverlayClose();
-            },
-            // initLocationTrackingMode: LocationTrackingMode.Follow, // 권한 획득 시 현재 위치를 따라가는 모드 설정
-          ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                // addMarker() 메서드를 호출하여 현재 위치에 마커 추가
-                model.addMarker(context);
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Stack(
+          children: [
+            NaverMap(
+              options: option,
+              onMapReady: (controller) {
+                model.setController(controller);
               },
-              child: const Icon(Icons.add),
+              onMapTapped: (point, latLng) {
+                log("$TAG onMapTapped point: $point, latLng: $latLng");
+                model.closeInfoAll();
+              },
+              onSymbolTapped: (symbol){
+                log("$TAG onSymbolTapped symbol: $symbol");
+                model.closeInfoAll();
+              },
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // addMarker() 메서드를 호출하여 현재 위치에 마커 추가
+                  model.addMarker(context);
+                },
+                child: const Icon(Icons.add),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
