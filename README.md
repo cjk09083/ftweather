@@ -20,7 +20,7 @@
 >####   6. Flutter ListView 추가 : https://cjk09083.tistory.com/64
 >####   7. Flutter Shared Preferences 추가 : https://cjk09083.tistory.com/65
 >####   8. Flutter CameraMove 추가 & NaverMaps 플러그인 변경 : https://cjk09083.tistory.com/68
->####   9. Flutter 선택한 좌표에 Marker 추가 : https://cjk09083.tistory.com/69
+>####   9. Flutter NaverMap 클릭한 좌표에 마커 추가 : https://cjk09083.tistory.com/69
 
 
 
