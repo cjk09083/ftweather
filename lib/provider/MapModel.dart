@@ -24,11 +24,8 @@ class MapModel extends ChangeNotifier {
   // 인포 데이터 목록 관리
   final List<InfoData> _infoList = [];
 
-  // 맵에서 선택한 좌표
-  NLatLng sLatLng = const NLatLng(0, 0);
   // 선택된 좌표 타입 0:마커 생성 불가능, 1:가능
   int selectType = 0;
-
   // 선택 좌표 표시 마커
   NMarker selAreaMarker = NMarker(id: "select", position: const NLatLng(0,0));
 
@@ -123,25 +120,24 @@ class MapModel extends ChangeNotifier {
     // NaverMapController가 초기화되었는지 확인
     if (_controller != null) {
       // 현재 카메라 위치 가져오기
-      NCameraPosition currentCameraPosition = await _controller!.getCameraPosition();
-      NLatLng cameraLatLng = currentCameraPosition.target;
-      cameraLatLng = selAreaMarker.position;
+      // NCameraPosition currentCameraPosition = await _controller!.getCameraPosition();
+      // NLatLng cameraLatLng = currentCameraPosition.target;
+      NLatLng newMarkerPos = selAreaMarker.position;
 
-      // 로그 출력
-      log("$TAG : Camera Pos $cameraLatLng");
+      log("$TAG : New Marker Pos $newMarkerPos");
 
       final now = DateTime.now();
       final createdAt = now.toString();
 
       String infoText = "$name\n"
-          "lat: ${cameraLatLng.latitude.toStringAsFixed(7)}\n"
-          "lon: ${cameraLatLng.longitude.toStringAsFixed(7)}\n"
+          "lat: ${newMarkerPos.latitude.toStringAsFixed(7)}\n"
+          "lon: ${newMarkerPos.longitude.toStringAsFixed(7)}\n"
           "$createdAt";
 
       // 현재 위치에 마커 추가
       final marker = NMarker(
         id: createdAt,
-        position: cameraLatLng,
+        position: newMarkerPos,
         caption: NOverlayCaption(text: name),
       );
 
@@ -277,11 +273,14 @@ class MapModel extends ChangeNotifier {
 
   void selectMap({bool remake = false, NLatLng latLng = const NLatLng(0.0, 0.0)}) {
     _showTappedPos = remake;
+    // 열린 InfoWindow 닫기
     closeInfoAll();
+    // 기존 마커 제거
     if(selAreaMarker.isAdded) {
       _controller!.deleteOverlay(selAreaMarker.info);
       selectType = 0;
     }
+    // 새로운 좌표에  마커 재생성
     if (remake) {
       selAreaMarker = NMarker(id: DateTime.now().toString(), position: latLng,
           anchor: const NPoint(0.5,0.5),
@@ -296,7 +295,6 @@ class MapModel extends ChangeNotifier {
       _controller!.addOverlay(selAreaMarker);
       selectType = 1;
     }
-
     notifyListeners();
   }
 
