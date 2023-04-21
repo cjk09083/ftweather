@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ftweather/config/Key.dart';
 import 'package:ftweather/provider/MapModel.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,17 @@ Future<void> nMapInit() async {
       onAuthFailed: (error) {
         log('$TAG Auth failed: $error');
       });
+}
+
+void fToast(String msg ,{ double size = 16.0, Color color = Colors.red}){
+  Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.blueAccent,
+      textColor: color,
+      fontSize: size
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -45,9 +45,11 @@ class MarkerList extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         NMarker marker = markers[index];
         final name = marker.caption!.text;
-        final lat = marker.position.latitude.toStringAsFixed(6);
-        final lng = marker.position.longitude.toStringAsFixed(6);
-        final createdAt = marker.info.id;
+        final lat = marker.position.latitude.toStringAsFixed(7);
+        final lng = marker.position.longitude.toStringAsFixed(7);
+        String createdAt = marker.info.id;
+        createdAt = createdAt.substring(0,createdAt.indexOf("."));
+
         return GestureDetector(
           onTap: (){
             Provider.of<MapModel>(context, listen: false).moveCamera(index);

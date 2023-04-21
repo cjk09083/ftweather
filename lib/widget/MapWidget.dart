@@ -19,11 +19,15 @@ class MapWidget extends StatelessWidget {
     ),
     mapType: NMapType.basic,
     locationButtonEnable: true,
+    consumeSymbolTapEvents: false,     // 심볼 터치가 맵 터치 이벤트를 소비
+
   );
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<MapModel>(context, listen: false);
+    final model = Provider.of<MapModel>(context, listen: true);
+    log("showTappedPos: ${model.showTappedPos} ");
+    log("selAreaMarker: ${model.selAreaMarker.position} ");
 
     return Expanded(
       flex: 6,
@@ -38,16 +42,37 @@ class MapWidget extends StatelessWidget {
               },
               onMapTapped: (point, latLng) {
                 log("$TAG onMapTapped point: $point, latLng: $latLng");
-                model.closeInfoAll();
+                model.selectMap(remake: true , latLng: latLng);
               },
               onSymbolTapped: (symbol){
-                log("$TAG onSymbolTapped symbol: $symbol");
-                model.closeInfoAll();
+                log("$TAG onSymbolTapped symbol: ${symbol.caption}");
+                // model.selectMap(remake: true , latLng: symbol.position);
               },
             ),
+            if (model.showTappedPos)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "위도: ${model.selAreaMarker.position.latitude.toStringAsFixed(7)},"
+                          " 경도: ${model.selAreaMarker.position.longitude.toStringAsFixed(7)}",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             Positioned(
-              bottom: 16,
-              right: 16,
+              bottom: 20,
+              right: 15,
               child: FloatingActionButton(
                 onPressed: () {
                   // addMarker() 메서드를 호출하여 현재 위치에 마커 추가
@@ -61,4 +86,5 @@ class MapWidget extends StatelessWidget {
       ),
     );
   }
+
 }

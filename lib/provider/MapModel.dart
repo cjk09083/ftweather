@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:ftweather/widget/MarkerDialog.dart';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
@@ -17,14 +18,27 @@ class MapModel extends ChangeNotifier {
   List<NMarker> get markers => _markers;
 
   // 인포 목록 관리
-
   final List<NInfoWindow> _infoWindows = [];
   List<NInfoWindow> get infoWindows => _infoWindows;
 
   // 인포 데이터 목록 관리
   final List<InfoData> _infoList = [];
 
+  // 맵에서 선택한 좌표
+  NLatLng sLatLng = const NLatLng(0, 0);
+  // 선택된 좌표 타입 0:마커 생성 불가능, 1:가능
+  int selectType = 0;
+
+  // 선택 좌표 표시 마커
+  NMarker selAreaMarker = NMarker(id: "select", position: const NLatLng(0,0));
+
+  // 생성 완료 플래그
   bool loadComp = false;
+
+  // 맵 상단 좌표 표시
+  bool _showTappedPos = false;
+  bool get showTappedPos => _showTappedPos;
+
 
   // NaverMapController 초기화 메서드
   void setController(NaverMapController controller) {
@@ -51,6 +65,7 @@ class MapModel extends ChangeNotifier {
       );
       _infoWindows.add(onMarkerInfoWindow);
       marker.setOnTapListener((NMarker marker) {
+        // selectMap(remake: false);
         closeInfoAll();
         marker.openInfoWindow(onMarkerInfoWindow);
       });
@@ -84,41 +99,20 @@ class MapModel extends ChangeNotifier {
     final TextEditingController nameController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
+    if(!selAreaMarker.isVisible || selectType == 0){
+      fToast("맵에서 위치를 선택해주세요.");
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Marker 추가"),
-          content: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: "이름",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Name cannot be empty";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      Navigator.of(context).pop();
-                      _createMarker(nameController.text);
-                    }
-                  },
-                  child: const Text("추가하기"),
-                ),
-              ],
-            ),
-          ),
+        return MarkerDialog(
+          formKey: formKey,
+          lat: selAreaMarker.position.latitude,
+          lon: selAreaMarker.position.longitude,
+          nameController: nameController,
+          onConfirm: () {_createMarker(nameController.text);},
         );
       },
     );
@@ -130,22 +124,24 @@ class MapModel extends ChangeNotifier {
     if (_controller != null) {
       // 현재 카메라 위치 가져오기
       NCameraPosition currentCameraPosition = await _controller!.getCameraPosition();
+      NLatLng cameraLatLng = currentCameraPosition.target;
+      cameraLatLng = selAreaMarker.position;
+
       // 로그 출력
-      log("$TAG : Camera Pos $currentCameraPosition");
+      log("$TAG : Camera Pos $cameraLatLng");
 
       final now = DateTime.now();
-      final timeWithoutMicroseconds = DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
-      final createdAt = timeWithoutMicroseconds.toString().replaceAll('.000', '');
+      final createdAt = now.toString();
 
       String infoText = "$name\n"
-          "lat: ${currentCameraPosition.target.latitude.toStringAsFixed(7)}\n"
-          "lon: ${currentCameraPosition.target.longitude.toStringAsFixed(7)}\n"
+          "lat: ${cameraLatLng.latitude.toStringAsFixed(7)}\n"
+          "lon: ${cameraLatLng.longitude.toStringAsFixed(7)}\n"
           "$createdAt";
 
       // 현재 위치에 마커 추가
       final marker = NMarker(
         id: createdAt,
-        position: currentCameraPosition.target,
+        position: cameraLatLng,
         caption: NOverlayCaption(text: name),
       );
 
@@ -158,6 +154,7 @@ class MapModel extends ChangeNotifier {
       // log("$TAG : Real Pos $position");
 
       marker.setOnTapListener((NMarker marker) {
+        // selectMap(remake: false);
         closeInfoAll();
         marker.openInfoWindow(onMarkerInfoWindow);
       });
@@ -168,6 +165,11 @@ class MapModel extends ChangeNotifier {
       _infoList.add(InfoData(marker.info.id, infoText));
       _infoWindows.add(onMarkerInfoWindow);
       _controller!.addOverlay(marker);
+
+      // 기본 맵 선택 마커 제거
+      _controller!.deleteOverlay(selAreaMarker.info);
+      selectType = 0;
+      _showTappedPos = false;
 
       // 마커 리스트 -> json String으로 변환
       await saverMarkers();
@@ -267,10 +269,35 @@ class MapModel extends ChangeNotifier {
   }
 
   void closeInfoAll(){
-    log('$TAG allOverlayClose ${_infoWindows.length}');
+    log('$TAG closeAllInfo ${_infoWindows.length}');
     for(NInfoWindow window in _infoWindows){
       if(window.isAdded) window.close();
     }
+  }
+
+  void selectMap({bool remake = false, NLatLng latLng = const NLatLng(0.0, 0.0)}) {
+    _showTappedPos = remake;
+    closeInfoAll();
+    if(selAreaMarker.isAdded) {
+      _controller!.deleteOverlay(selAreaMarker.info);
+      selectType = 0;
+    }
+    if (remake) {
+      selAreaMarker = NMarker(id: DateTime.now().toString(), position: latLng,
+          anchor: const NPoint(0.5,0.5),
+          size: const Size(35,35),
+          iconTintColor: Colors.red,
+          icon: const NOverlayImage.fromAssetImage('assets/focus.png'),
+      );
+      selAreaMarker.setOnTapListener((NMarker marker) {
+        log("$TAG onTap selAreaMarker $marker");
+        // selectMap(remake: true, latLng: marker.position);
+      });
+      _controller!.addOverlay(selAreaMarker);
+      selectType = 1;
+    }
+
+    notifyListeners();
   }
 
 }
