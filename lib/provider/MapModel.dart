@@ -298,6 +298,23 @@ class MapModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> moveIndex(int oldIndex, int newIndex) async {
+    if (oldIndex < newIndex) newIndex--;
+    final marker = _markers.removeAt(oldIndex);
+    _markers.insert(newIndex, marker);
+
+    final infoWin = _infoWindows.removeAt(oldIndex);
+    _infoWindows.insert(newIndex, infoWin);
+
+    final info = _infoList.removeAt(oldIndex);
+    _infoList.insert(newIndex, info);
+
+    log('${_markers[oldIndex].caption!.text} Move $oldIndex => $newIndex');
+
+    await saverMarkers();
+    notifyListeners();
+  }
+
 }
 
 class InfoData {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:ftweather/provider/MapModel.dart';
@@ -8,75 +10,77 @@ class MarkerList extends StatelessWidget {
 
   List<int> flexList = [20,40,30,15];
 
+  Color borderColor = Colors.grey.shade400;
+
   @override
   Widget build(BuildContext context) {
-    final markers = Provider.of<MapModel>(context).markers;
+    final mapModel = Provider.of<MapModel>(context, listen: true);
+    final markers = mapModel.markers;
     return Expanded(
       flex: 4,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-            child: Row(
-              children: [
-                buildHeader('이름', flex: flexList[0], size: 13, weight: FontWeight.bold),
-                buildDivider(thick: 1),
-                buildHeader('경도, 위도', flex: flexList[1], size: 13, weight: FontWeight.bold),
-                buildDivider(thick: 1),
-                buildHeader('등록일', flex: flexList[2], size: 13, weight: FontWeight.bold),
-                buildDivider(thick: 1),
-                buildHeader('삭제', flex: flexList[3], size: 13, weight: FontWeight.bold),
-              ],
-            ),
+      child:
+      ReorderableListView(
+        header: Container(
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: borderColor)),
           ),
-          const Divider(color: Colors.black, thickness: 1,),
-          Expanded(
-            child: markerListView(markers),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+          child: Row(
+            children: [
+              buildHeader('이름', flex: flexList[0], size: 13, weight: FontWeight.bold),
+              buildDivider(thick: 1),
+              buildHeader('경도, 위도', flex: flexList[1], size: 13, weight: FontWeight.bold),
+              buildDivider(thick: 1),
+              buildHeader('등록일', flex: flexList[2], size: 13, weight: FontWeight.bold),
+              buildDivider(thick: 1),
+              buildHeader('삭제', flex: flexList[3], size: 13, weight: FontWeight.bold),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        onReorder: (int oldIndex, int newIndex) {
+          mapModel.moveIndex(oldIndex, newIndex);
+        },
+        children: List.generate(
+          markers.length,
+          (index) {
+            NMarker marker = markers[index];
+            final name = marker.caption!.text;
+            final lat = marker.position.latitude.toStringAsFixed(7);
+            final lng = marker.position.longitude.toStringAsFixed(7);
+            String createdAt = marker.info.id;
+            createdAt = createdAt.substring(0,createdAt.indexOf("."));
 
-  ListView markerListView(List<NMarker> markers) {
-    return ListView.separated(
-      separatorBuilder: (context, index) => const Divider(color:Colors.black),
-      itemCount: markers.length,
-      itemBuilder: (BuildContext context, int index) {
-        NMarker marker = markers[index];
-        final name = marker.caption!.text;
-        final lat = marker.position.latitude.toStringAsFixed(7);
-        final lng = marker.position.longitude.toStringAsFixed(7);
-        String createdAt = marker.info.id;
-        createdAt = createdAt.substring(0,createdAt.indexOf("."));
-
-        return GestureDetector(
-          onTap: (){
-            Provider.of<MapModel>(context, listen: false).moveCamera(index);
-          },
-          child: ListTile(
-            title: Row(
-              children: [
-                buildHeader(name, flex: flexList[0], ),
-                buildDivider(),
-                buildHeader('$lat,\n$lng', flex: flexList[1], ),
-                buildDivider(),
-                buildHeader(createdAt, flex: flexList[2], ),
-                buildDivider(),
-                Expanded(flex: flexList[3],
-                  child: IconButton(
-                    onPressed: () {
-                      Provider.of<MapModel>(context, listen: false).removeMarker(index);
-                    },
-                    icon: const Icon(Icons.delete_forever_rounded),
-                    iconSize: 30,
-                  ),
+            return GestureDetector(
+              key: ValueKey(markers[index]),
+              onTap: (){
+                Provider.of<MapModel>(context, listen: false).moveCamera(index);
+              },
+              child: ListTile(
+                shape: Border(bottom: BorderSide(color: borderColor)),
+                title: Row(
+                  children: [
+                    buildHeader(name, flex: flexList[0], ),
+                    buildDivider(),
+                    buildHeader('$lat,\n$lng', flex: flexList[1], ),
+                    buildDivider(),
+                    buildHeader(createdAt, flex: flexList[2], ),
+                    buildDivider(),
+                    Expanded(flex: flexList[3],
+                      child: IconButton(
+                        onPressed: () {
+                          Provider.of<MapModel>(context, listen: false).removeMarker(index);
+                        },
+                        icon: const Icon(Icons.delete_forever_rounded),
+                        iconSize: 30,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      },
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -92,7 +96,7 @@ class MarkerList extends StatelessWidget {
 
   Widget buildDivider({double thick = 0.0}) {
     return SizedBox(
-      height: 20,
+      height: 30,
       child: VerticalDivider(
         color: Colors.black,
         width: 1,
