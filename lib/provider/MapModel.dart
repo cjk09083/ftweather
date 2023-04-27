@@ -299,19 +299,27 @@ class MapModel extends ChangeNotifier {
   }
 
   Future<void> moveIndex(int oldIndex, int newIndex) async {
+    // 변경 직후 변경전 타일도 인식해 버려서 index-- 필요.
     if (oldIndex < newIndex) newIndex--;
+
+    // 마커 목록 변경
     final marker = _markers.removeAt(oldIndex);
     _markers.insert(newIndex, marker);
 
+    // 인포 윈도우 목록 변경
     final infoWin = _infoWindows.removeAt(oldIndex);
     _infoWindows.insert(newIndex, infoWin);
 
+    // 인포 내용 목록 변경
     final info = _infoList.removeAt(oldIndex);
     _infoList.insert(newIndex, info);
 
     log('${_markers[oldIndex].caption!.text} Move $oldIndex => $newIndex');
 
+    // 변경된 List들 저장
     await saverMarkers();
+
+    // Provider UI 변경 알림
     notifyListeners();
   }
 

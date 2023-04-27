@@ -51,7 +51,7 @@ class MarkerList extends StatelessWidget {
             createdAt = createdAt.substring(0,createdAt.indexOf("."));
 
             return GestureDetector(
-              key: ValueKey(markers[index]),
+              key: ValueKey(markers[index]),			// 리스트 요소 Key 지정
               onTap: (){
                 Provider.of<MapModel>(context, listen: false).moveCamera(index);
               },
