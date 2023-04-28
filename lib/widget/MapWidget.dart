@@ -49,32 +49,33 @@ class MapWidget extends StatelessWidget {
                 // model.selectMap(remake: true , latLng: symbol.position);
               },
             ),
-            if (model.showTappedPos)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
+
+            AnimatedPositioned(
+              top: model.showTappedPos ? 0 : -50,
+              right: 0,
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.0,
                   ),
-                  child: Center(
-                    child: Text(
-                      "위도: ${model.selAreaMarker.position.latitude.toStringAsFixed(7)},"
-                          " 경도: ${model.selAreaMarker.position.longitude.toStringAsFixed(7)}",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    "위도: ${model.selAreaMarker.position.latitude.toStringAsFixed(7)},"
+                        " 경도: ${model.selAreaMarker.position.longitude.toStringAsFixed(7)}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
+            ),
             Positioned(
               bottom: 20,
               right: 15,
