@@ -55,8 +55,13 @@ class MapWidget extends StatelessWidget {
                 right: 0,
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: Text(
