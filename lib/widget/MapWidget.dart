@@ -26,8 +26,6 @@ class MapWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<MapModel>(context, listen: true);
-    log("showTappedPos: ${model.showTappedPos} ");
-    log("selAreaMarker: ${model.selAreaMarker.position} ");
 
     return Expanded(
       flex: 6,

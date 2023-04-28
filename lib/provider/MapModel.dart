@@ -191,8 +191,7 @@ class MapModel extends ChangeNotifier {
   }
 
   Future<void> removeMarker(int index) async {
-    NMarker marker = _markers[index];
-    _controller!.deleteOverlay(marker.info);
+    _controller!.deleteOverlay(_markers[index].info);
     _markers.removeAt(index);
     _infoList.removeAt(index);
     _infoWindows.removeAt(index);
