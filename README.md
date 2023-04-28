@@ -22,13 +22,12 @@
 >####   8. Flutter CameraMove 추가 & NaverMaps 플러그인 변경 : https://cjk09083.tistory.com/68
 >####   9. Flutter NaverMap 클릭한 좌표에 마커 추가 : https://cjk09083.tistory.com/69
 >####   10. Flutter ListView 드래그로 순서 변경 : https://cjk09083.tistory.com/70
-
+>####   11. Flutter 위젯에 Slide Action 추가 : https://cjk09083.tistory.com/71
 
 
 ## 남은과제
 - 맵 롱클릭해서 마커 추가 (스킵) 
 - 마커 롱클릭해서 마커 이동 (스킵)
-- 리스트 좌우 슬라이드해서 이름변경 / 삭제 (Dismissible)
 - 리스트 내부 버튼으로 현재좌표 날씨 확인 
 - 주소 검색
 
