@@ -7,6 +7,11 @@ import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 
+class InfoData {
+  String id, text;
+  InfoData(this.id, this.text);
+}
+
 class MapModel extends ChangeNotifier {
 
   // NaverMapController 변수
@@ -89,12 +94,11 @@ class MapModel extends ChangeNotifier {
   }
 
   // 현재 위치에 마커를 추가하는 메서드
-  Future<void> addMarker(BuildContext context) async {
+  void addMarker(BuildContext context) {
     // 로그 출력
     log("$TAG : addMarker");
 
     final TextEditingController nameController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
 
     if(!selAreaMarker.isVisible || selectType == 0){
       fToast("맵에서 위치를 선택해주세요.");
@@ -105,10 +109,12 @@ class MapModel extends ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return MarkerDialog(
-          formKey: formKey,
+          name: "",
+          formKey: GlobalKey<FormState>(),
           lat: selAreaMarker.position.latitude,
           lon: selAreaMarker.position.longitude,
           nameController: nameController,
+          type: DialogType.add,
           onConfirm: () {_createMarker(nameController.text);},
         );
       },
@@ -126,8 +132,7 @@ class MapModel extends ChangeNotifier {
 
       log("$TAG : New Marker Pos $newMarkerPos");
 
-      final now = DateTime.now();
-      final createdAt = now.toString();
+      final createdAt = DateTime.now().toString();
 
       String infoText = "$name\n"
           "lat: ${newMarkerPos.latitude.toStringAsFixed(7)}\n"
@@ -181,7 +186,7 @@ class MapModel extends ChangeNotifier {
     String jsonMarker = markerToJson(_markers);
     String jsonInfo = infoToJson(_infoList);
 
-    log('$TAG Markers to Json : $jsonMarker');
+    debugPrint('$TAG Markers to Json : $jsonMarker');
 
     // jsonData 저장
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -190,7 +195,31 @@ class MapModel extends ChangeNotifier {
 
   }
 
-  Future<void> removeMarker(int index) async {
+
+
+  void showMarkerDelete(BuildContext context, int index) {
+    NMarker marker = _markers[index];
+    final TextEditingController nameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MarkerDialog(
+          name: marker.caption!.text,
+          formKey: GlobalKey<FormState>(),
+          lat: marker.position.latitude,
+          lon: marker.position.longitude,
+          nameController: nameController,
+          type: DialogType.delete,
+          onConfirm: () {
+            deleteMarker(index);
+          },
+        );
+      },
+    );
+
+  }
+
+  Future<void> deleteMarker(int index) async {
     _controller!.deleteOverlay(_markers[index].info);
     _markers.removeAt(index);
     _infoList.removeAt(index);
@@ -198,6 +227,69 @@ class MapModel extends ChangeNotifier {
     // 마커 리스트 -> json String으로 변환
     await saverMarkers();
     notifyListeners();
+  }
+
+  void showMarkerEdit(BuildContext context, int index) {
+    NMarker marker = _markers[index];
+    final TextEditingController nameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MarkerDialog(
+          name: marker.caption!.text,
+          formKey: GlobalKey<FormState>(),
+          lat: marker.position.latitude,
+          lon: marker.position.longitude,
+          nameController: nameController,
+          type: DialogType.edit,
+          onConfirm: () {
+            updateMarker(index, nameController.text, marker);
+            },
+        );
+      },
+    );
+  }
+
+  Future<void> updateMarker(int index, String name, NMarker oldMarker) async {
+    if (_controller != null) {
+      NLatLng newMarkerPos = oldMarker.position;
+      log("$TAG : Edit Marker : ${oldMarker.caption!.text}");
+      final createdAt = oldMarker.info.id;
+      String infoText = "$name\n"
+          "lat: ${newMarkerPos.latitude.toStringAsFixed(7)}\n"
+          "lon: ${newMarkerPos.longitude.toStringAsFixed(7)}\n"
+          "${createdAt.substring(0,createdAt.indexOf("."))}";
+
+      // 현재 위치에 마커 추가
+      final marker = NMarker(
+        id: createdAt,
+        position: newMarkerPos,
+        caption: NOverlayCaption(text: name),
+      );
+
+      final onMarkerInfoWindow = NInfoWindow.onMarker(
+          id: marker.info.id,
+          text: infoText
+      );
+
+      marker.setOnTapListener((NMarker marker) {
+        closeInfoAll();
+        marker.openInfoWindow(onMarkerInfoWindow);
+      });
+
+      // 기존 마커 삭제
+      _controller!.deleteOverlay(_markers[index].info);
+
+      // 마커 목록에 삽입
+      _markers[index] = marker;
+      _infoList[index] = InfoData(marker.info.id, infoText);
+      _infoWindows[index] = onMarkerInfoWindow;
+      _controller!.addOverlay(marker);
+
+      // 마커 리스트 -> json String으로 변환
+      await saverMarkers();
+      notifyListeners();
+    }
   }
 
   Future<void> moveCamera(int index) async {
@@ -324,9 +416,8 @@ class MapModel extends ChangeNotifier {
     notifyListeners();
   }
 
-}
+  void notify(){
+    notifyListeners();
+  }
 
-class InfoData {
-  String id, text;
-  InfoData(this.id, this.text);
 }

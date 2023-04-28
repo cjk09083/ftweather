@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:ftweather/provider/MapModel.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MarkerList extends StatelessWidget {
   MarkerList({Key? key}) : super(key: key);
@@ -31,9 +32,9 @@ class MarkerList extends StatelessWidget {
               buildDivider(thick: 1),
               buildHeader('경도, 위도', flex: flexList[1], size: 13, weight: FontWeight.bold),
               buildDivider(thick: 1),
-              buildHeader('등록일', flex: flexList[2], size: 13, weight: FontWeight.bold),
+              buildHeader('수정일', flex: flexList[2], size: 13, weight: FontWeight.bold),
               buildDivider(thick: 1),
-              buildHeader('삭제', flex: flexList[3], size: 13, weight: FontWeight.bold),
+              buildHeader('보기', flex: flexList[3], size: 13, weight: FontWeight.bold),
             ],
           ),
         ),
@@ -50,33 +51,65 @@ class MarkerList extends StatelessWidget {
             String createdAt = marker.info.id;
             createdAt = createdAt.substring(0,createdAt.indexOf("."));
 
-            return GestureDetector(
-              key: ValueKey(markers[index]),			// 리스트 요소 Key 지정
-              onTap: (){
-                Provider.of<MapModel>(context, listen: false).moveCamera(index);
-              },
-              child: ListTile(
-                shape: Border(bottom: BorderSide(color: borderColor)),
-                title: Row(
-                  children: [
-                    buildHeader(name, flex: flexList[0], ),
-                    buildDivider(),
-                    buildHeader('$lat,\n$lng', flex: flexList[1], ),
-                    buildDivider(),
-                    buildHeader(createdAt, flex: flexList[2], ),
-                    buildDivider(),
-                    Expanded(flex: flexList[3],
-                      child: IconButton(
-                        onPressed: () {
-                          Provider.of<MapModel>(context, listen: false).removeMarker(index);
-                        },
-                        icon: const Icon(Icons.delete_forever_rounded),
-                        iconSize: 30,
+            return Slidable(
+              key: UniqueKey(),
+              startActionPane: ActionPane(		// 좌에서 우로 슬라이드
+                extentRatio: 0.2,				// 슬라이드시 기존 위젯을 가리는 비율 (0 ~ 1)
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context){mapModel.showMarkerEdit(context, index);},
+                    backgroundColor: Colors.green,
+                    icon: Icons.edit,
+                    // label: "이름변경",
+                    autoClose: true,			// 외부 클릭시 자동 close
+                  ),
+                ],
+              ),
+
+              endActionPane: ActionPane(		// 우에서 좌로 슬라이드
+                extentRatio: 0.2,
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context){mapModel.showMarkerDelete(context, index);},
+                    backgroundColor: Colors.red,
+                    icon: Icons.delete_forever_rounded,
+                    // label: "삭제",
+                    autoClose: true,
+                  ),
+                ],
+              ),
+
+              child: GestureDetector(
+                key: ValueKey(markers[index]),			// 리스트 요소 Key 지정
+                onTap: (){
+                  Provider.of<MapModel>(context, listen: false).moveCamera(index);
+                },
+                child: ListTile(
+                  shape: Border(bottom: BorderSide(color: borderColor)),
+                  title: Row(
+                    children: [
+                      buildHeader(name, flex: flexList[0], ),
+                      buildDivider(),
+                      buildHeader('$lat,\n$lng', flex: flexList[1], ),
+                      buildDivider(),
+                      buildHeader(createdAt, flex: flexList[2], ),
+                      buildDivider(),
+                      Expanded(flex: flexList[3],
+                        child: IconButton(
+                          onPressed: () {
+                            // Provider.of<MapModel>(context, listen: false).removeMarker(index);
+                          },
+                          icon: const Icon(Icons.search),
+                          iconSize: 30,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+
             );
           },
         ),
