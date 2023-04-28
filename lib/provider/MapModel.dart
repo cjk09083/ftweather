@@ -132,7 +132,7 @@ class MapModel extends ChangeNotifier {
       String infoText = "$name\n"
           "lat: ${newMarkerPos.latitude.toStringAsFixed(7)}\n"
           "lon: ${newMarkerPos.longitude.toStringAsFixed(7)}\n"
-          "$createdAt";
+          "${createdAt.substring(0,createdAt.indexOf("."))}";
 
       // 현재 위치에 마커 추가
       final marker = NMarker(
@@ -191,6 +191,8 @@ class MapModel extends ChangeNotifier {
   }
 
   Future<void> removeMarker(int index) async {
+    NMarker marker = _markers[index];
+    _controller!.deleteOverlay(marker.info);
     _markers.removeAt(index);
     _infoList.removeAt(index);
     _infoWindows.removeAt(index);
