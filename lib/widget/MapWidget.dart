@@ -82,7 +82,8 @@ class MapWidget extends StatelessWidget {
                   // addMarker() 메서드를 호출하여 현재 위치에 마커 추가
                   model.addMarker(context);
                 },
-                child: const Icon(Icons.add),
+                child: const Icon(Icons.add_location_alt_outlined,
+                size: 30,),
               ),
             ),
           ],

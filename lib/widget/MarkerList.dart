@@ -101,8 +101,18 @@ class MarkerList extends StatelessWidget {
                           onPressed: () {
                             // Provider.of<MapModel>(context, listen: false).removeMarker(index);
                           },
-                          icon: const Icon(Icons.search),
-                          iconSize: 30,
+                          /*
+                          Icons.wb_sunny: 맑은 날씨를 나타내는 아이콘
+                          Icons.cloud: 흐린 날씨를 나타내는 아이콘
+                          Icons.flash_on: 번개를 나타내는 아이콘
+                          Icons.grain: 눈이나 비를 나타내는 아이콘
+                          Icons.beach_access: 해변과 관련된 아이콘
+                          Icons.umbrella: 우산을 나타내는 아이콘
+                          */
+                          icon: const Icon(Icons.cloud_circle,
+                            color: Colors.blueAccent,
+                          ),
+                          iconSize: 40,
                         ),
                       ),
                     ],
