@@ -16,4 +16,3 @@ Future<void> fcmInit() async {
   // FCM 알림 초기화
   await initializeLocalNotificationsPlugin();
 }
-

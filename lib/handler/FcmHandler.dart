@@ -47,11 +47,7 @@ Future<void> setupFcmHandlers() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   log('$TAG Got a message while in the background!');
-  RemoteNotification? notification = message.notification;
-  if (notification != null) {
-    log('$TAG Message title (bg): ${notification.title}');
-    log('$TAG Message body (bg): ${notification.body}');
-  }
+  readNotify(message);
 }
 
 // 포그라운드 메시지 핸들러
@@ -59,12 +55,9 @@ void handleForegroundMessage(RemoteMessage message) {
   log('$TAG Got a message while in the foreground!');
 
   RemoteNotification? notification = message.notification;
-  if (notification != null) {
-    log('$TAG Message title (fg): ${notification.title}');
-    log('$TAG Message body (fg): ${notification.body}');
-  }
-  AndroidNotification? android = message.notification?.android;
+  readNotify(message);
 
+  AndroidNotification? android = message.notification?.android;
   if (notification != null) {
     flutterLocalNotificationsPlugin.show(
       notification.hashCode,                          // 알림 id, 고정시 알림창이 쌓이지않고 갱신된다.
@@ -100,11 +93,7 @@ Future<void> _onSelectNotification(String? payload) async {
 void openBackgroundMessage(RemoteMessage message, {String? type}) {
   type ??= 'iOS';
   log('$TAG Clicked a message while in the background! ($type)');
-  RemoteNotification? notification = message.notification;
-  if (notification != null) {
-    log('$TAG Message title (bg): ${notification.title}');
-    log('$TAG Message body (bg): ${notification.body}');
-  }
+  Map data = readNotify(message);
 }
 
 // 알림 권한 요청 (iOS)
@@ -114,6 +103,20 @@ Future<void> requestNotificationPermissions() async {
     carPlay: true,
     criticalAlert: true,
   );
+}
+
+Map readNotify(RemoteMessage message){
+  RemoteNotification? notification = message.notification;
+  if (notification != null) {
+    log('$TAG Message title (bg): ${notification.title}');
+    log('$TAG Message body (bg): ${notification.body}');
+
+    Map data = message.data;
+    log('$TAG Data : $data');
+    return data;
+  }
+
+  return {};
 }
 
 // 알림 초기화
